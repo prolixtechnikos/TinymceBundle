@@ -1,5 +1,5 @@
 {
-    "name": "stfalcon/tinymce-bundle",
+    "name": "prolix/tinymce-bundle",
     "description": "This Bundle integrates TinyMCE WYSIWYG editor into a Symfony2 project.",
     "keywords": ["wysiwyg", "tinymce", "editor", "symfony2", "bundle"],
     "type": "symfony-bundle",
@@ -27,7 +27,7 @@
     "require": {
         "php": "^7.2.5",
         "symfony/framework-bundle": "^5.0",
-        "twig/twig": "^2.12"
+        "twig/twig": "3.0.*"
     },
     "autoload": {
         "psr-0": {
