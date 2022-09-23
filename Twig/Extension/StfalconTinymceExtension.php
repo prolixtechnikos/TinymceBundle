@@ -7,6 +7,7 @@ use Symfony\Component\Asset\Packages;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
+use Twig\Environment;
 
 /**
  * StfalconTinymceExtension.
@@ -16,9 +17,11 @@ use Twig\TwigFunction;
 class StfalconTinymceExtension extends AbstractExtension
 {
     /**
-     * @var ContainerInterface $container
+     * @var Environment $twig
      */
-    protected $container;
+    protected $twig;
+
+    protected $config;
 
     /**
      * Asset Base Url.
@@ -35,36 +38,17 @@ class StfalconTinymceExtension extends AbstractExtension
     private $packages;
 
     /**
-     * @param ContainerInterface $container
-     * @param Packages           $packages
+     * @param Environment $twig
+     * @param Packages    $packages
+     * @param array       $config
      */
-    public function __construct(ContainerInterface $container, Packages $packages)
+    public function __construct(Environment $twig, Packages $packages, $config)
     {
-        $this->container = $container;
+        $this->twig = $twig;
         $this->packages = $packages;
+        $this->config = $config;
     }
 
-    /**
-     * @param string $id The service identifier
-     *
-     * @return object The associated service
-     */
-    public function getService($id)
-    {
-        return $this->container->get($id);
-    }
-
-    /**
-     * Get parameters from the service container.
-     *
-     * @param string $name
-     *
-     * @return mixed
-     */
-    public function getParameter($name)
-    {
-        return $this->container->getParameter($name);
-    }
 
     /**
      * Returns a list of functions to add to the existing list.
@@ -91,8 +75,8 @@ class StfalconTinymceExtension extends AbstractExtension
      */
     public function tinymceInit($options = []): string
     {
-        $config = $this->getParameter('stfalcon_tinymce.config');
-        $config = array_merge_recursive($config, $options);
+        // $config = $this->getParameter('stfalcon_tinymce.config');
+        $config = array_merge_recursive($this->config, $options);
 
         $this->baseUrl = $config['base_url'] ?? null;
 
@@ -187,7 +171,7 @@ class StfalconTinymceExtension extends AbstractExtension
             \json_encode($config)
         );
 
-        return $this->getService('twig')->render(
+        return $this->twig->render(
             '@StfalconTinymce/Script/init.html.twig',
             [
                 'tinymce_config' => $tinymceConfiguration,
